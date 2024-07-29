@@ -17,8 +17,9 @@ h1 {
 }
 p {
   text-align: center;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 500;
+  color: gray;
 }
 footer {
   background-color: #333;
@@ -49,4 +50,23 @@ img {
   border-radius: 10px;
   margin: 10px auto;
   display: block;
+}
+input {
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  color: #797676;
+  border: 1px solid #797676;
+}
+input:focus{
+  border: 1px solid blue;
+}
+button{
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 10px;
+  outline: none;
+  border: none;
 }

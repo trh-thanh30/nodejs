@@ -1,7 +1,8 @@
 const path = require("path");
 const express = require("express");
 const hbs = require("hbs");
-
+const { geocode } = require("./utils/geocode.js");
+const { whathercode } = require("./utils/whathercode.js");
 // Define paths for express config
 const app = express();
 const port = 3000;
@@ -36,16 +37,51 @@ app.get("/help", (req, res) => {
   });
 });
 app.get("/weather", (req, res) => {
-  res.send({
-    location: "Hanoi",
-    temperature: 25,
-    weather_descriptions: "sunny",
+  if (!req.query.address) {
+    return res.status(404).send({
+      error: "You must provide an address",
+    });
+  }
+  geocode(req.query.address, (error, { location } = {}) => {
+    if (error) {
+      return res.send({ error });
+    }
+    whathercode(
+      location,
+      (
+        error,
+        { temperature, weather_descriptions, wind_speed, wind_degree } = {}
+      ) => {
+        if (error) {
+          return res.send({ error });
+        }
+        res.send({
+          temperature: temperature,
+          weather_descriptions: weather_descriptions,
+          location: location,
+          address: req.query.address,
+          wind_speed: wind_speed,
+          wind_degree: wind_degree,
+        });
+      }
+    );
   });
 });
 app.get("/help/*", (req, res) => {
   res.render("not-found", {
     errorMess: "Help article not found",
     name: "Huu Thanh",
+  });
+});
+app.get("/products", (req, res) => {
+  if (!req.query.search) {
+    return res.send({
+      error: "You must provide a search term",
+    });
+  }
+
+  res.send({
+    products: [],
   });
 });
 app.get("*", (req, res) => {
